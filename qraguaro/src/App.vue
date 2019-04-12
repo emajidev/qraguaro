@@ -1,10 +1,38 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+       <table>
+       <td  valign="top" class="z-pm" id="sidebar">
+        <div id="brand" >
+            <img class="logo" src="qraccon.png" alt="">
+        </div>
+        <div id="menu">
+            <input id="search" type="text" placeholder="Buscar">
+            <ul id="menu-content">
+                <li> <router-link to ="/" class="Escáner">Escáner</router-link> </li>
+                <li> <router-link to ="/Listado" class="Inicio">Listado</router-link> </li>
+                <li> <router-link to ="/registrar" class="Inicio">Registrar</router-link> </li>
+                <li> <router-link to ="/about" class="Inicio">Lista</router-link> </li>
+                
+            </ul>
+        </div>
+    </td>
+    <td valign="top" class="z-pm center" >
+   
+		<div class="z-pm" id="welcomebar" ><h5 class="welcome">B i e n v e n i d o</h5></div>	
+        <div class="content">
+       <!--    Visualizar los routers o enlaces -->
+          <router-view></router-view>
+   
+        </div>
+       
+    
+   
+
+
+
+    </td>
+    </table>
+
   </div>
 </template>
 
@@ -12,6 +40,20 @@
 body{
     font-family: OpenSans, Verdana, Tahoma, Arial, "Trebuchet MS", "Times New Roman", Georgia, sans-serif, serif;
     background: #EDEDED;
+}
+a{
+    text-decoration: none;
+      margin:0;
+  padding:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+  color:rgb(29, 126, 113)
+}
+a:hover{
+    color: none;
+    text-decoration:none;
+    
 }
 table{
     width:100% ;
@@ -31,7 +73,7 @@ ul{
     padding: 0;
     margin: 0;
 }
-li{
+li,a{
     text-decoration: none;
     list-style: none;
     color: #e1ffff;
@@ -43,6 +85,27 @@ input{
     font-family: OpenSans, Verdana, Arial, Helvetica, sans-serif;
     font-size: 12px;
     
+}
+.btn-send{
+    border: none;
+    background: rgb(112, 252, 112);
+    width: 100px;
+    text-align: center;
+    margin-left: 15px;
+    height: 25px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    cursor: pointer;
+}
+.blok-in{
+ background: none;
+ border: none;
+ color: #23282E;
+ font-size:12px;
+}
+.list-inline{
+    display:inline;
 }
 .logo{
   width: 100%;

@@ -1,29 +1,33 @@
 <template>
-<div id ='#scan'>
- <h2> Escáner QR</h2>
- <div class="content">
-    <!--   camara scanner -->
-    <ScanQr v-if="show"  v-on:code-scanned="codeScanned" v-on:error-captured="errorCaptured" :stop-on-scanned="true" :draw-on-found="true" :responsive="false"/>
-    {{scanned}}
-        
-        
-        
-        
-       
-        
-</div>
-</div>    
+  
+  <div id="#Listado">
+      <h3>Listado </h3>
+       <button v-on:click = "getUser"> consultar</button>
+        <div id="list"  v-for = "(item , index) in  users" >
+        <ul>  
+        <li>  
+        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.name" v-model="item.lastNameU ">  </li>
+        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
+        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
+        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.email" v-model="item.emailU">  </li>
+        <li class="list-inline"> <button  v-on:click ="updateUser( item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )" >Actualizar</button></li>
+        <li class="list-inline"> <button  v-on:click="deliteUser(item.id , index)" > Eliminar </button> </li>
+         </ul>
+    </div>
+</div>   
 </template>
 
 <script>
+// @ is an alias to /src
+
 import ScanQr from '@/components/ScanQr.vue'
 import io from 'socket.io-client';
 import axios from 'axios'
 import { async } from 'q';
 
 export default {
-    name:'scan',
-    components: {
+  name: 'Listado',
+  components: {
     ScanQr
   },
   data() {

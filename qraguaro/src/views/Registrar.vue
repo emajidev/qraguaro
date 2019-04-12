@@ -1,55 +1,6 @@
 <template>
-  <div class="qraccess">
-
-        <div class="content">
-       <!--    Visualizar los routers o enlaces -->
-          <router-view></router-view>
-        <!--   camara scanner -->
-        <div class="qrscam">
-          <ScanQr v-if="show"  v-on:code-scanned="codeScanned" v-on:error-captured="errorCaptured" :stop-on-scanned="true" :draw-on-found="true" :responsive="false"/>
-         {{scanned}}
-        </div>
-    
-    
-        <div class="userIdPhoto">
-            <div id="p-profile" class="content"><h1 id="interrogation">?</h1></div>
-            <div class="t-profile"></div>
-            <div class="t-profile"></div>
-            <div class="t-profile"></div>
-            <div class="t-profile"></div>
-            <div class="t-profile"></div>
-        </div>
-        
-        <h4 id="date">Miercoles 12/3/2019 12:00 pm</h4>
-        <div class="content">
-            <div class="btn-index content"><img src="../assets/icons/list.png" class="btn-img" alt=""></div>
-            <div class="btn-index content"><img src="../assets/icons/stadistics.png" class="btn-img" alt=""></div>
-            <div class="btn-index content"><img src="../assets/icons/cron.png" class="btn-img" alt=""></div>
-        </div>  
-
-
-        <button v-on:click="onLed">onled</button>
-        <button v-on:click="offLed">offLed</button>
-        <button v-on:click = "getUser"> consultar</button>
-          <!-- Modificacion de usuarios  -->
-  
-    <h3>lista</h3>
-    <div id="list"  v-for = "(item , index) in  users" >
-      
-      <ul>    
-      <li>   </li><li></li> 
-      <li> <input class="" type="text" :placeholder="item.name" v-model="item.lastNameU ">  </li>
-      <li> <input class="" type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
-      <li> <input class="" type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
-      <li> <input class="" type="text" :placeholder="item.email" v-model="item.emailU">  </li>
-      <li> <button class="" v-on:click ="updateUser( item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )" >Actualizar</button></li>
-      <li> <button  v-on:click="deliteUser(item.id , index)" > Eliminar </button> </li>
-    
-      </ul>
-    
-    </div>
-
-   <!--  formulario de registro  -->
+ <div id ="#Registrar">
+     <!--  formulario de registro  -->
    <h3>Registrar</h3>
     <form action="">
       <input class="input-crud" type="text" placeholder="Nombre" v-model="name">
@@ -57,13 +8,11 @@
       <input class="input-crud" type="text" placeholder="Cedula" v-model="cid">
       <input class="input-crud" type="text" placeholder="Telefono" v-model="telf">
       <input class="input-crud" type="email" placeholder="Correo" v-model="email">
-      <input class="input-crud" value="Enviar" v-on:click="createUser">
+      <input class="input-crud btn-send" value="Enviar" v-on:click="createUser">
     </form> 
-        
-    </td>
-    </table>
-  </div>
+</div>   
 </template>
+
 
 <script>
 // @ is an alias to /src
@@ -74,7 +23,7 @@ import axios from 'axios'
 import { async } from 'q';
 
 export default {
-  name: 'qraccess',
+  name: 'Registrar',
   components: {
     ScanQr
   },
