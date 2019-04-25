@@ -1,5 +1,6 @@
 <template>
   <div id ="#Registrar">
+    
       <!--  formulario de registro  -->
     <h2>Registrar</h2>
       <form action="">
@@ -19,22 +20,31 @@
           <li class="list-inline"> <input :readonly="disableInput" class="blok-in"     type="email" :placeholder="item.email" v-model="item.emailU">  </li>
           <li id="botones" class="list-inline"> 
             
-              <button id="update"   v-on:click="onedit(index ,false )"  >Actualizar</button>
-            <button id="save" v-on:click ="updateUser(index, item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )" >Guardar</button>
-    
-    
-
+              <button id="update"   v-on:click="onedit(index ,false )"   >Actualizar</button>
+            <button id="save" v-on:click ="confirmeSave(index)"  >Guardar</button>
+            <template v-if="confirm">
+                <div class="confirm" >
+           <h5>Seguro que desea guardar los cambios?</h5>
+           <button  >No</button>
+           <button v-on:click ="updateUser(index, item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )"  >Si</button>
+         </div>
+            </template>
+        
           </li>   
           <li class="list-inline"> <button  v-on:click="deliteUser(item.id , index)" > Eliminar </button> </li>
         </ul>
+       
       </div>
+      
   </div>  
+  
 </template>
 
 
 <script>
 import io from 'socket.io-client';
 import axios from 'axios'
+import { async } from 'q';
 
 export default {
   name: 'Registrar',
@@ -44,7 +54,8 @@ export default {
   
   data() {
     return {
-      dialog: false,
+      confirm: false,
+      value: null,
       activada : false,
       placeholderValue:'watafaka',
       users:[],
@@ -59,6 +70,13 @@ export default {
     };
   },
   methods: {
+    onConfirm () {
+      this.confirm = true;
+        console.log(this.confirm);
+      },
+      onCancel () {
+        this.value = 'Disagreed'
+      },
     sendForm(){
         console.log(this.name);
         console.log(this.lastName);
@@ -126,9 +144,9 @@ export default {
         
       console.log(res.data);
     },
-    updateUser: async function(index,id, nameU,lastNameU,cidU,telfU,emailU) {
-      console.log("la posicion es " ,index);
-      this.activada = !this.activada;
+    confirmeSave(index){
+
+      this.confirm = true;
       var ninputs = this.$refs.input[index].childNodes;
       ninputs.forEach(function(e){
         if(e.querySelector("#save")){
@@ -136,16 +154,27 @@ export default {
           console.log( e.querySelector("#save").parentNode);
           var save = e.querySelector("#save");
           var update = e.querySelector("#update");
+          var confirm = e.querySelector(".confirm");
           save.style.display="none";
-          update.style.display="inline-block";
+          
           } 
          
         if(e.querySelector("input")){
           console.log('inputs');
           e.querySelector("input").readOnly=true;
           }
-        });   
-      
+        }); 
+    },
+    updateUser:async function(index,id, nameU,lastNameU,cidU,telfU,emailU) {
+      console.log("la posicion es " ,index);
+      this.confirm = !this.confirm; 
+      var ninputs = this.$refs.input[index].childNodes;
+      ninputs.forEach(function(e){
+    if(e.querySelector("#update")){
+      var update = e.querySelector("#update");
+      update.style.display="inline-block";
+    }
+      });   
       let userUpdate={
             id: id,
             name : nameU,
@@ -155,10 +184,12 @@ export default {
             email : emailU
         }
         
+        console.log("se guardo");
         console.log(userUpdate);
         let res = await axios.post('http://10.0.32.44:3333/update-user',userUpdate)
         console.log(res.data); 
-      
+        
+        
     },
     deliteUser:async function (idEvent , index) {
       let idUser = {
@@ -175,8 +206,9 @@ export default {
       
       },
     },
-   mounted() {
+   mounted:async function() {
      this.getUser();
+     console.log(this.confirm)
     },
 };
 
@@ -184,5 +216,14 @@ export default {
 <style scope>
 #save{
   display: none;
+}
+  .md-dialog {
+    max-width: 768px;
+  }
+.confirm{
+  width: 100%;
+  text-align: center;
+  
+  background: brown;
 }
 </style>
