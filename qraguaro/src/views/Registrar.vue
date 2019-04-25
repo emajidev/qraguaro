@@ -1,54 +1,65 @@
 <template>
- <div id ="#Registrar">
-     <!--  formulario de registro  -->
-   <h3>Registrar</h3>
-    <form action="">
-      <input class="input-crud" type="text" placeholder="Nombre" v-model="name">
-      <input class="input-crud" type="text" placeholder="Apellido" v-model="lastName">
-      <input class="input-crud" type="text" placeholder="Cedula" v-model="cid">
-      <input class="input-crud" type="text" placeholder="Telefono" v-model="telf">
-      <input class="input-crud" type="email" placeholder="Correo" v-model="email">
-      <input class="input-crud btn-send" value="Enviar" v-on:click="createUser">
-    </form> 
-</div>   
+  <div id ="#Registrar">
+      <!--  formulario de registro  -->
+    <h2>Registrar</h2>
+      <form action="">
+        <input class="input-crud" type="text" placeholder="Nombre" v-model="name">
+        <input class="input-crud" type="text" placeholder="Apellido" v-model="lastName">
+        <input class="input-crud" type="text" placeholder="Cedula" v-model="cid">
+        <input class="input-crud" type="text" placeholder="Telefono" v-model="telf">
+        <input class="input-crud" type="email" placeholder="Correo" v-model="email">
+        <input class="input-crud btn-send" value="Guardar" v-on:click="createUser ">
+      </form> 
+      <h2>Registrados </h2>
+      <div id="list"  v-for = "(item , index) in  users" :key="item.id" >
+        <ul ref="input">  
+          <li class="list-inline"> <input :readonly="disableInput" class="blok-in"   type="text" :placeholder="item.name" v-model="item.lastNameU "  >  </li>
+          <li class="list-inline"> <input :readonly="disableInput" class="blok-in"    type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
+          <li class="list-inline"> <input :readonly="disableInput" class="blok-in"    type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
+          <li class="list-inline"> <input :readonly="disableInput" class="blok-in"     type="email" :placeholder="item.email" v-model="item.emailU">  </li>
+          <li id="botones" class="list-inline"> 
+            
+              <button id="update"   v-on:click="onedit(index ,false )"  >Actualizar</button>
+            <button id="save" v-on:click ="updateUser(index, item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )" >Guardar</button>
+    
+    
+
+          </li>   
+          <li class="list-inline"> <button  v-on:click="deliteUser(item.id , index)" > Eliminar </button> </li>
+        </ul>
+      </div>
+  </div>  
 </template>
 
 
 <script>
-// @ is an alias to /src
-
-import ScanQr from '@/components/ScanQr.vue'
 import io from 'socket.io-client';
 import axios from 'axios'
-import { async } from 'q';
 
 export default {
   name: 'Registrar',
   components: {
-    ScanQr
+    
   },
+  
   data() {
     return {
+      dialog: false,
+      activada : false,
       placeholderValue:'watafaka',
       users:[],
-      errorMessage: "",
-      scanned: "",
-      show: true,
       user: '',
-      message: '',
-      messages: [],
-      socket : io('10.0.32.38:3001'),
-      socketArdu : io('10.0.32.38:3000'),
       name:'',
       lastName:'',
       cid:'',
       telf:'',
       email:'',
+      disableInput:true
       
     };
   },
   methods: {
-      sendForm(){
+    sendForm(){
         console.log(this.name);
         console.log(this.lastName);
         console.log(this.cid);
@@ -61,126 +72,117 @@ export default {
           telf : this.telf,
           email : this.email,
       }
-      console.log(usuario);
-    
-      },
       
-      sendMessage(e) {
-            e.preventDefault();
-            
-            this.socket.emit('SEND_MESSAGE', {
-                
-                user: this.user,
-                message: this.message
-            });
-            this.message = ''
-        },
-        onLed(e){
-            e.preventDefault();
-            this.socketArdu.emit('on');
-            
-        },
-         offLed(e){
-            e.preventDefault();
-            this.socketArdu.emit('off');
-        },
-         OpenDoor(){
-            /* e.preventDefault(); */
-            this.socketArdu.emit('OpenDoor');
-            
+    
+    }, 
+    onedit:function ( index ,onRead) {
+      
+      
+      
+      var ninputs = this.$refs.input[index].childNodes;
+      ninputs.forEach(function(e){
+        
+          console.log(e.querySelector("#update")); 
+        
+        if(e.querySelector("#update")){
+          console.log('actualizar');
+          console.log( e.querySelector("#update").parentNode);
+          var update = e.querySelector("#update");
+          var save = e.querySelector("#save");
+          update.style.display="none";
+          save.style.display="inline-block";
+          }  
+        if(e.querySelector("input")){
+          console.log('inputs');
+          e.querySelector("input").readOnly=onRead;
+          }
+        });   
          
-        },
-      ///// Envia el codigo scaneado al servidor para verificar 
-      codeScanned: async function (code){
-      this.scanned = code;
-      console.log(this.scanned);
-     
-      let res = await axios.post('http://10.0.32.44:3333/checkQR', {QR: this.scanned});
-      console.log(res.data);
-      this.OpenDoor();
     },
+ 
    
     getUser: async function (){
-    let vue = this;
-    let res = await axios.get('http://10.0.32.44:3333/list');
-    vue.users = res.data;
-    console.log(res.data);
+      let vue = this;
+      let res = await axios.get('http://10.0.32.44:3333/list');
+      vue.users = res.data;
+      console.log(res.data);
     },
-   sendDataUser: async function (){
-     
-    let res = await axios.post('http://10.0.32.44:3333/checkQR', {
-    QR: this.scanned
-  })
-    console.log(res.data);
-   },
-  createUser: async function (){
-    let user={
-          name : this.name,
-          lastName : this.lastName,
-          cid : this.cid,
-          telf : this.telf,
-          email : this.email,
-      }
-    let res = await axios.post('http://10.0.32.44:3333/create-user', user)
-  console.log(res.data);
-  },
-  updateUser: async function(id, nameU,lastNameU,cidU,telfU,emailU) {
-     let userUpdate={
-          id: id,
-          name : nameU,
-          lastName : lastNameU,
-          cid : cidU,
-          telf : telfU,
-          email : emailU
-      }
-      console.log(userUpdate);
-      let res = await axios.post('http://10.0.32.44:3333/update-user',userUpdate) 
-      console.log(res.data); 
+    createUser: async function (){
+    
+      let user={
+            name : this.name,
+            lastName : this.lastName,
+            cid : this.cid,
+            telf : this.telf,
+            email : this.email,
+        }
+      let res = await axios.post('http://10.0.32.44:3333/create-user', user)
+      this.getUser();
+      this.name  = '';
+      this.lastName  = '';
+      this.cid  = '';
+      this.telf  = '';
+      this.email  = '';
+        
+      console.log(res.data);
+    },
+    updateUser: async function(index,id, nameU,lastNameU,cidU,telfU,emailU) {
+      console.log("la posicion es " ,index);
+      this.activada = !this.activada;
+      var ninputs = this.$refs.input[index].childNodes;
+      ninputs.forEach(function(e){
+        if(e.querySelector("#save")){
+          console.log('guardado');
+          console.log( e.querySelector("#save").parentNode);
+          var save = e.querySelector("#save");
+          var update = e.querySelector("#update");
+          save.style.display="none";
+          update.style.display="inline-block";
+          } 
+         
+        if(e.querySelector("input")){
+          console.log('inputs');
+          e.querySelector("input").readOnly=true;
+          }
+        });   
       
-  },
-   deliteUser:async function (idEvent , index) {
-     let idUser = {
-       id: idEvent 
-     }
-     let res = await axios.post('http://10.0.32.44:3333/delete-user', idUser)
-  console.log(res.data);
-      if (res.data.deleted){
+      let userUpdate={
+            id: id,
+            name : nameU,
+            lastName : lastNameU,
+            cid : cidU,
+            telf : telfU,
+            email : emailU
+        }
+        
+        console.log(userUpdate);
+        let res = await axios.post('http://10.0.32.44:3333/update-user',userUpdate)
+        console.log(res.data); 
+      
+    },
+    deliteUser:async function (idEvent , index) {
+      let idUser = {
+        id: idEvent 
+      }
+       if(confirm("Do you really want to delete?")){
+        let res = await axios.post('http://10.0.32.44:3333/delete-user', idUser)
+        console.log(res.data);
+        if (res.data.deleted){
         console.log('borrar');
         this.users.splice(index , 1);
-      }
+        }
+       }
+      
+      },
     },
-    errorCaptured(error) {
-      switch (error.name) {
-        case 'NotAllowedError':
-          this.errorMessage = 'Camera permission denied.'
-          break;
-        case 'NotFoundError':
-          this.errorMessage = 'There is no connected camera.'
-          break;
-        case 'NotSupportedError':
-          this.errorMessage = 'Seems like this page is served in non-secure context.'
-          break;
-        case 'NotReadableError':
-          this.errorMessage = 'Couldn\'t access your camera. Is it already in use?'
-          break;
-        case 'OverconstrainedError':
-          this.errorMessage = 'Constraints don\'t match any installed camera.'
-          break;
-        default:
-          this.errorMessage = 'UNKNOWN ERROR: ' + error.message
-      }
-      console.error(this.errorMessage);
-    }
-  },
    mounted() {
-        this.socket.on('MESSAGE', (data) => {
-            this.messages = [...this.messages, data];
-            // you can also do this.messages.push(data)
-        });
-    }
+     this.getUser();
+    },
 };
 
 </script>
 <style scope>
-
+#save{
+  display: none;
+}
 </style>
