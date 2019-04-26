@@ -14,19 +14,23 @@
       <h2>Registrados </h2>
       <div id="list"  v-for = "(item , index) in  users" :key="item.id" >
         <ul ref="input">  
+          <li class="list-inline"><p>{{index}}</p></li>
           <li class="list-inline"> <input :readonly="disableInput" class="blok-in"   type="text" :placeholder="item.name" v-model="item.lastNameU "  >  </li>
           <li class="list-inline"> <input :readonly="disableInput" class="blok-in"    type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
           <li class="list-inline"> <input :readonly="disableInput" class="blok-in"    type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
           <li class="list-inline"> <input :readonly="disableInput" class="blok-in"     type="email" :placeholder="item.email" v-model="item.emailU">  </li>
+          
           <li id="botones" class="list-inline"> 
             
               <button id="update"   v-on:click="onedit(index ,false )"   >Actualizar</button>
             <button id="save" v-on:click ="confirmeSave(index)"  >Guardar</button>
-            <template v-if="confirm">
+            <template >
                 <div class="confirm" >
+                  <div class="box-confirm">
            <h5>Seguro que desea guardar los cambios?</h5>
-           <button  >No</button>
+           <button v-on:click ="cancel(index)" >No</button>
            <button v-on:click ="updateUser(index, item.id, item.lastNameU, item.cidU, item.telfU, item.emailU )"  >Si</button>
+         </div>
          </div>
             </template>
         
@@ -54,11 +58,13 @@ export default {
   
   data() {
     return {
+      isEdit:false,
       confirm: false,
       value: null,
       activada : false,
       placeholderValue:'watafaka',
       users:[],
+      
       user: '',
       name:'',
       lastName:'',
@@ -70,48 +76,30 @@ export default {
     };
   },
   methods: {
-    onConfirm () {
-      this.confirm = true;
-        console.log(this.confirm);
-      },
-      onCancel () {
-        this.value = 'Disagreed'
-      },
-    sendForm(){
-        console.log(this.name);
-        console.log(this.lastName);
-        console.log(this.cid);
-        console.log(this.telf);
-        console.log(this.email);
-        let usuario={
-          name : this.name,
-          lastname : this.lastName,
-          cid : this.cid,
-          telf : this.telf,
-          email : this.email,
-      }
-      
-    
-    }, 
+ 
+
     onedit:function ( index ,onRead) {
       
+      console.log("probar si es una array ", this.users);
       
+      /* this.ArrayUser.push({
+        isEdit:false,
+      }) */
       
+      console.log("el item es ", index);
       var ninputs = this.$refs.input[index].childNodes;
       ninputs.forEach(function(e){
         
-          console.log(e.querySelector("#update")); 
+         
         
         if(e.querySelector("#update")){
-          console.log('actualizar');
-          console.log( e.querySelector("#update").parentNode);
+       
           var update = e.querySelector("#update");
           var save = e.querySelector("#save");
           update.style.display="none";
           save.style.display="inline-block";
           }  
         if(e.querySelector("input")){
-          console.log('inputs');
           e.querySelector("input").readOnly=onRead;
           }
         });   
@@ -123,30 +111,40 @@ export default {
       let vue = this;
       let res = await axios.get('http://10.0.32.44:3333/list');
       vue.users = res.data;
-      console.log(res.data);
+      let modificador = Object.entries(vue.users[0]);
+      modificador.push({
+        edit:false
+      })
+      console.log(modificador);
     },
     createUser: async function (){
-    
-      let user={
+      
+      let user= {
             name : this.name,
             lastName : this.lastName,
             cid : this.cid,
             telf : this.telf,
             email : this.email,
-        }
-      let res = await axios.post('http://10.0.32.44:3333/create-user', user)
+            edit : false
+            
+      };
+      let dataUser = (user)
+      console.log("objeto enviado",user);
+      let res = await axios.post('http://10.0.32.44:3333/create-user',user)
       this.getUser();
       this.name  = '';
       this.lastName  = '';
       this.cid  = '';
       this.telf  = '';
       this.email  = '';
-        
+      
       console.log(res.data);
+ 
+
     },
     confirmeSave(index){
-
-      this.confirm = true;
+      
+      let isEdit = true;
       var ninputs = this.$refs.input[index].childNodes;
       ninputs.forEach(function(e){
         if(e.querySelector("#save")){
@@ -156,7 +154,7 @@ export default {
           var update = e.querySelector("#update");
           var confirm = e.querySelector(".confirm");
           save.style.display="none";
-          
+          confirm.style.display="flex";
           } 
          
         if(e.querySelector("input")){
@@ -164,6 +162,22 @@ export default {
           e.querySelector("input").readOnly=true;
           }
         }); 
+    },
+    cancel(index){
+       var ninputs = this.$refs.input[index].childNodes;
+      ninputs.forEach(function(e){
+        if(e.querySelector("#save")){
+          console.log('guardado');
+          console.log( e.querySelector("#save").parentNode);
+          var save = e.querySelector("#save");
+          var update = e.querySelector("#update");
+          var confirm = e.querySelector(".confirm");
+          update.style.display="inline-block";
+          confirm.style.display="none";
+          
+
+          }} );
+          this.getUser();
     },
     updateUser:async function(index,id, nameU,lastNameU,cidU,telfU,emailU) {
       console.log("la posicion es " ,index);
@@ -173,6 +187,10 @@ export default {
     if(e.querySelector("#update")){
       var update = e.querySelector("#update");
       update.style.display="inline-block";
+       var update = e.querySelector("#update");
+       var confirm = e.querySelector(".confirm");
+      update.style.display="inline-block";
+       confirm.style.display="none";
     }
       });   
       let userUpdate={
@@ -181,11 +199,12 @@ export default {
             lastName : lastNameU,
             cid : cidU,
             telf : telfU,
-            email : emailU
+            email : emailU,
+            estado: false
         }
         
         console.log("se guardo");
-        console.log(userUpdate);
+        
         let res = await axios.post('http://10.0.32.44:3333/update-user',userUpdate)
         console.log(res.data); 
         
@@ -208,22 +227,41 @@ export default {
     },
    mounted:async function() {
      this.getUser();
-     console.log(this.confirm)
+
+     
     },
+
 };
 
 </script>
 <style scope>
-#save{
+#save,.confirm{
   display: none;
 }
   .md-dialog {
     max-width: 768px;
   }
 .confirm{
+   position: fixed;
+  left: 0;
+  top: 0;
   width: 100%;
+  height: 100%;
   text-align: center;
+  background: rgba(0, 0, 0, 0.616);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
-  background: brown;
+}
+p{
+  color: black;
+  display: inline;
+}
+.box-confirm{
+  color: black;
+  background: white;
+  width: 200px;
+  
 }
 </style>
