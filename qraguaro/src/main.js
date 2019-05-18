@@ -5,6 +5,8 @@ import store from './store'
 import './registerServiceWorker'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
+import VueSession from 'vue-session'
+Vue.use(VueSession)
 
 Vue.use(VueMaterial)
 

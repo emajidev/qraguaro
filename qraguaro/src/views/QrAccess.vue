@@ -147,7 +147,7 @@ export default {
       console.log(this.scanned);
      
       let res = await axios.post('http://10.0.32.44:3333/checkQR', {QR: this.scanned});
-      console.log(res.data);
+      console.log(res.data.id);
       this.OpenDoor();
     },
    

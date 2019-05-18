@@ -3,22 +3,37 @@
        <table>
        <td  valign="top" class="z-pm" id="sidebar">
         <div id="brand" >
-            <img class="logo" src="qraccon.png" alt="">
+            
+       <div id="clock">
+           <digital-clock :blink="true" :displaySeconds="true" :twelveHour="true"  />
+       </div>
+        
+       
         </div>
         <div id="menu">
-            <input id="search" type="text" placeholder="Buscar">
+            <!-- <input id="search" type="text" placeholder="Buscar"> -->
+           <router-link to ="/registrar" class="Inicio"> <button id="btn-login"> ingresar</button></router-link> 
+            
+        </div>
+        <div class="subtitle">
+             <h5 >Entradas</h5>
+        </div>
+       
+        <div id="showAccess"></div>
+    </td>
+    <td valign="top" class="z-pm center" >
+   
+		<div class="z-pm" id="welcomebar" >
             <ul id="menu-content">
                 <li> <router-link to ="/" class="Escáner">Escáner</router-link> </li>
                 <li> <router-link to ="/Listado" class="Inicio">Listado</router-link> </li>
                 <li> <router-link to ="/registrar" class="Inicio">Registrar</router-link> </li>
-                <li> <router-link to ="/about" class="Inicio">Lista</router-link> </li>
+                <li> <router-link to ="/about" class="Inicio">Ayuda</router-link> </li>
                 
             </ul>
-        </div>
-    </td>
-    <td valign="top" class="z-pm center" >
-   
-		<div class="z-pm" id="welcomebar" ><h5 class="welcome">B i e n v e n i d o</h5></div>	
+        
+        <!--  <button id="btn-logut" v-on:click ="logout()" >salir</button> -->
+        </div>	
         <div class="content">
        <!--    Visualizar los routers o enlaces -->
           <router-view></router-view>
@@ -39,7 +54,7 @@
 <style>
     body{
         font-family: OpenSans, Verdana, Tahoma, Arial, "Trebuchet MS", "Times New Roman", Georgia, sans-serif, serif;
-        background: #EDEDED;
+        background: rgb(27, 30, 34);
     }
     a{
         text-decoration: none;
@@ -68,23 +83,43 @@
     h5{
     font-weight: 500;
     }
+    #clock{
+        margin-top: 50px;
+        text-align: center;
+        color: aquamarine;
+        font-size: 20px;
+    }
     ul{
         display: block;
         padding: 0;
         margin: 0;
     }
     li,a{
+        display: inline;
         text-decoration: none;
         list-style: none;
         color: #e1ffff;
         line-height:35px;
         cursor: pointer;
         padding-left: 10px;
+        padding: 0 10px 0 10px;
     }
     input{
         font-family: OpenSans, Verdana, Arial, Helvetica, sans-serif;
         font-size: 12px;
         
+    }
+    #btn-login{
+        background: none;
+        border: 1px white solid;
+        border-radius: 8px;
+        color: white;
+        margin: 20px 0 50px 0;
+        padding: 5px;
+        width: 80%;
+        outline:none;
+        cursor: pointer;
+      
     }
     .btn-send{
         border: none;
@@ -97,8 +132,9 @@
         border-radius: 5px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         cursor: pointer;
+        
     }
-    .blok-in{
+    .block-in{
     background: none;
     border: none;
     color: #23282E;
@@ -112,6 +148,13 @@
     }
     .welcome{
     padding-left: 5px; padding-top: 12px;
+    display: inline;
+    }
+    #btn-logut{
+        position: absolute;
+        right: 0;
+        display: inline;
+        
     }
     #date{
     text-align:center; color: rgb(2, 86, 134)
@@ -123,7 +166,7 @@
         padding: 0; margin: 0;
     }
     #sidebar{
-        background:transparent; width:175px; height:100%;background:#23282E;
+        background:transparent; width:250px; height:100%;background:#23282E;
     }
 
     #welcomebar{
@@ -131,7 +174,7 @@
         height: 35px;
         width: 100%;
         color: #ccc;
-        font-size: 18px;
+        font-size: 14px;
     }
     #search{
         width: 90%;
@@ -153,6 +196,21 @@
         font-family: OpenSans, Verdana;
         font-size: 12px;
         font-weight: 400;
+        text-align: center;
+       
+    }
+    .subtitle{
+        background:#5d6b6e36;
+        border-radius: 0 20px 0 0;
+        width: 100px;
+        height: 50px;
+        color: #bbbbbb;
+        padding: 20px;
+    }
+    #showAccess{
+        background: #5d6b6e36;
+        width: 100%;
+        height: 70%;
     }
     .qrscam{
         float: left;
@@ -204,4 +262,56 @@
         width: 70%;
         height: 70%;
     }
+    body{
+        -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; 
+    }
 </style>
+
+<script>
+import DigitalClock from "vue-digital-clock";
+import axios from 'axios'
+export default {
+  name: 'app',
+  data:{
+      hour:0,
+      minutes:0,
+      seconds:0
+
+  },
+  components: {
+   DigitalClock
+  },
+
+  methods: {
+
+ 
+    logout() {
+      console.log("SALISTE DE LA SESSION")
+     
+       let vue = this;
+        console.log(this.$session.get('admin'))
+        let tokenout = {
+            token : this.$session.get('admin')
+        }
+       
+        axios.post('http://10.0.32.44:3333/logout',tokenout )
+        .then(function (response) {
+            if(response.data.deleted){
+                vue.$session.destroy()
+                vue.$router.push('/')
+                console.log("Destruido")
+                
+            }
+              
+                console.log(response.data);
+              })
+              .catch(function(error){
+                console.log(error);
+              });    
+      } 
+  }
+}
+</script>

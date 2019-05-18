@@ -5,10 +5,10 @@
         <div id="list"  v-for = "(item , index) in  users" >
         <ul>  
         <li>  
-        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.name" v-model="item.lastNameU ">  </li>
-        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
-        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
-        <li class="list-inline"> <input class="blok-in"   readonly="readonly" type="text" :placeholder="item.email" v-model="item.emailU">  </li>
+        <li class="list-inline"> <input class="inpt block-in"   readonly="readonly" type="text" :placeholder="item.name" v-model="item.lastNameU ">  </li>
+        <li class="list-inline"> <input class="inpt block-in"   readonly="readonly" type="text" :placeholder="item.lastName" v-model="item.cidU">  </li>
+        <li class="list-inline"> <input class="inpt block-in"   readonly="readonly" type="text" :placeholder="item.cid" v-model="item.telfU">  </li>
+        <li class="list-inline"> <input class="inpt block-in"   readonly="readonly" type="text" :placeholder="item.email" v-model="item.emailU">  </li>
          </ul>
     </div>
 </div>   

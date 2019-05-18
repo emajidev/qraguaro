@@ -1,17 +1,25 @@
 <template>
-<div id ='#scan'>
- <h2> Escáner QR</h2>
+<div id ='scan'>
+ <h3> Escáner QR</h3>
  <div class="content">
     <!--   camara scanner -->
-    <ScanQr v-if="show"  v-on:code-scanned="codeScanned" v-on:error-captured="errorCaptured" :stop-on-scanned="true" :draw-on-found="true" :responsive="false"/>
-    {{scanned}}
-        
-        
-        
-        
-       
-        
+    <ScanQr v-if="show"  v-on:code-scanned="codeScanned" v-on:error-captured="errorCaptured" :stop-on-scanned="true" :draw-on-found="true" :responsive="false"/>  
 </div>
+<div id="dataQR">
+  <h5>
+    Codigo QR: {{scanned}}
+  </h5>
+  <h5>
+    Fecha: {{data}}
+  </h5>
+  <h5>
+    Hora: {{hours}}
+  </h5>
+  <h5>
+    Nombre: {{name}}
+  </h5>  
+</div>
+
 </div>    
 </template>
 
@@ -43,111 +51,38 @@ export default {
       cid:'',
       telf:'',
       email:'',
+      data:" ",
+      hours:""
       
     };
   },
   methods: {
-      sendForm(){
-        console.log(this.name);
-        console.log(this.lastName);
-        console.log(this.cid);
-        console.log(this.telf);
-        console.log(this.email);
-        let usuario={
-          name : this.name,
-          lastname : this.lastName,
-          cid : this.cid,
-          telf : this.telf,
-          email : this.email,
-      }
-      console.log(usuario);
-    
-      },
-      
-      sendMessage(e) {
-            e.preventDefault();
-            
-            this.socket.emit('SEND_MESSAGE', {
-                
-                user: this.user,
-                message: this.message
-            });
-            this.message = ''
-        },
-        onLed(e){
-            e.preventDefault();
-            this.socketArdu.emit('on');
-            
-        },
-         offLed(e){
-            e.preventDefault();
-            this.socketArdu.emit('off');
-        },
-         OpenDoor(){
-            /* e.preventDefault(); */
-            this.socketArdu.emit('OpenDoor');
-            
+      OpenDoor(){
+        /* e.preventDefault(); */
+        this.socketArdu.emit('OpenDoor');
+        var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        var f=new Date();
+        this.data = f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear()
+        this.hours = f.getHours() + " : "  + f.getMinutes()
+        console.log(this.data);
          
         },
       ///// Envia el codigo scaneado al servidor para verificar 
       codeScanned: async function (code){
       this.scanned = code;
       console.log(this.scanned);
-     
+      
       let res = await axios.post('http://10.0.32.44:3333/checkQR', {QR: this.scanned});
       console.log(res.data);
-      this.OpenDoor();
-    },
-   
-    getUser: async function (){
-    let vue = this;
-    let res = await axios.get('http://10.0.32.44:3333/list');
-    vue.users = res.data;
-    console.log(res.data);
-    },
-   sendDataUser: async function (){
+      if(res.data.check){
+        this.OpenDoor();
+        this.name = res.data.name
+      }else{
+        this.name = "usuario no registrado"
+      }
      
-    let res = await axios.post('http://10.0.32.44:3333/checkQR', {
-    QR: this.scanned
-  })
-    console.log(res.data);
-   },
-  createUser: async function (){
-    let user={
-          name : this.name,
-          lastName : this.lastName,
-          cid : this.cid,
-          telf : this.telf,
-          email : this.email,
-      }
-    let res = await axios.post('http://10.0.32.44:3333/create-user', user)
-  console.log(res.data);
-  },
-  updateUser: async function(id, nameU,lastNameU,cidU,telfU,emailU) {
-     let userUpdate={
-          id: id,
-          name : nameU,
-          lastName : lastNameU,
-          cid : cidU,
-          telf : telfU,
-          email : emailU
-      }
-      console.log(userUpdate);
-      let res = await axios.post('http://10.0.32.44:3333/update-user',userUpdate) 
-      console.log(res.data); 
-      
-  },
-   deliteUser:async function (idEvent , index) {
-     let idUser = {
-       id: idEvent 
-     }
-     let res = await axios.post('http://10.0.32.44:3333/delete-user', idUser)
-  console.log(res.data);
-      if (res.data.deleted){
-        console.log('borrar');
-        this.users.splice(index , 1);
-      }
     },
+  
     errorCaptured(error) {
       switch (error.name) {
         case 'NotAllowedError':
@@ -171,15 +106,19 @@ export default {
       console.error(this.errorMessage);
     }
   },
-   mounted() {
-        this.socket.on('MESSAGE', (data) => {
-            this.messages = [...this.messages, data];
-            // you can also do this.messages.push(data)
-        });
-    }
+
 };
 
 </script>
 <style scope>
-
+#dataQR{
+  margin-top: 25px;
+  color: aquamarine;
+  background: rgba(41, 48, 59, 0.473);
+  padding: 15px;
+  border-radius: 5px;
+}
+#scan{
+ color: aquamarine;
+}
 </style>

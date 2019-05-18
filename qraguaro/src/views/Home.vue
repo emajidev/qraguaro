@@ -18,7 +18,10 @@
     </td>
     <td valign="top" class="z-pm center" >
    
-		<div class="z-pm" id="welcomebar" ><h5 class="welcome">B i e n v e n i d o</h5></div>	
+		<div class="z-pm" id="welcomebar" >
+      <h5 class="welcome">B i e n </h5>
+      <button v-on:click ="logout()" >salir</button>
+    </div>	
         <div class="content">
        <!--    Visualizar los routers o enlaces -->
           <router-view></router-view>
@@ -40,6 +43,13 @@ export default {
   name: 'home',
   components: {
    
+  },
+  methods: {
+    logout() {
+      console.log("SALISTE DE LA SESSION")
+        this.$session.destroy()
+        this.$router.push('/')
+      }    
   }
 }
 </script>

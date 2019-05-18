@@ -1,7 +1,7 @@
 <template>
   <div class="container" ref="container">
     <video v-show="showPlay" class="source" ref="video" :width="videoWH.width" :height="videoWH.height" controls></video>
-    <canvas v-show="!showPlay" ref="canvas"></canvas>
+    <canvas id="prevideo" v-show="!showPlay" ref="canvas" :width="videoWH.width" :height="videoWH.height"></canvas>
     <button v-show="showPlay" @click="run">Play!</button>
   </div>
 </template>
@@ -204,5 +204,9 @@ export default {
 .container {
   width: 100%;
   height: auto;
+}
+#prevideo{
+  border: 1px #00ffff1a solid;
+  border-radius: 10px;
 }
 </style>
