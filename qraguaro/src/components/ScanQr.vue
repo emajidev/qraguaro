@@ -8,6 +8,7 @@
 
 <script>
 import jsQR from "jsqr";
+import { setTimeout } from 'timers';
 
 export default {
   name: "vue-qr-reader",
@@ -34,11 +35,11 @@ export default {
     },
     videoWidth: {
       type: Number,
-      default: 640
+      default: 480
     },
     videoHeight: {
       type: Number,
-      default: 480
+      default: 640
     },
     responsive: {
       type: Boolean,
@@ -49,7 +50,7 @@ export default {
     return {
       showPlay: false,
       containerWidth: null,
-      active: false
+      active: true
     };
   },
   computed: {
@@ -170,9 +171,18 @@ export default {
         this.parity += 1;
       }
       if (this.parity > 5) {
-        /* this.active = this.stopOnScanned ? false : true; */ // esto se activa cuando se detecta qr scaneado
-        this.parity = 0;
-        this.$emit("code-scanned", code);
+
+      this.active = false;
+       /*  this.active = this.stopOnScanned ? false : true; */ // esto se activa cuando se detecta qr scaneado
+      this.parity = 0;
+      this.$emit("code-scanned", code);
+      var self = this;
+      setTimeout(()=>{
+        console.log("liberar");
+        self.active = true;
+        self.run();
+        
+      },2000);
       }
     },
     fullStop() {
@@ -202,8 +212,10 @@ export default {
 
 <style scope>
 .container {
-  width: 100%;
-  height: auto;
+ 
+
+  transform: rotate(-90deg);
+  
 }
 #prevideo{
   border: 1px #00ffff1a solid;

@@ -7,7 +7,9 @@
           <input type="text" placeholder="Contraseña" v-model="password">
       </form>
       <button v-on:click ="login()" >Entrar</button>
-      
+      <div>
+        <img id="iconsecurity" src="../assets/images/iconsecurity.png" alt="">
+      </div>
   </div>
   
 </div>
@@ -71,14 +73,14 @@ export default {
         
       },
         login: function () {
-           let self = this;
+           let vue = this;
             let login = {
                 username : this.username,
                 password : this.password
             }
             axios.post('http://10.0.32.44:3333/login',login)
               .then(function (response) {
-                self.$router.push('/')
+                vue.$router.push('/')
                 if (response.status === 200 && 'token' in response.data) {
                   vue.$session.start()
                   vue.$session.set('admin', response.data.token)
@@ -114,6 +116,10 @@ export default {
   align-items: center;
   
 }
+#iconsecurity{
+  width: 50px;
+  margin:20px;
+}
 #login{
   position: absolute;
   top: 30%;
@@ -123,6 +129,7 @@ export default {
   border: 1px rgba(127, 255, 212, 0.664) solid;
   border-radius: 8px;
   padding: 20px 40px 0 40px;
+  background: #00ffff1a;
  
 }
 input{
@@ -141,7 +148,7 @@ button{
         border: 1px white solid;
         border-radius: 8px;
         color: white;
-        margin: 20px 0 50px 0;
+        margin-top: 20px ;
         padding: 5px;
         width: 100%;
         outline:none;

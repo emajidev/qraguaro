@@ -3,22 +3,19 @@
        <table>
        <td  valign="top" class="z-pm" id="sidebar">
         <div id="brand" >
-            
-       <div id="clock">
-           <digital-clock :blink="true" :displaySeconds="true" :twelveHour="true"  />
-       </div>
-        
-       
+            <p>Qraguaro</p>
+            <div class="logo" > </div>
+            <div id="clock">
+                <digital-clock :blink="true" :displaySeconds="true" :twelveHour="true"  />
+            </div>
         </div>
         <div id="menu">
             <!-- <input id="search" type="text" placeholder="Buscar"> -->
-           <router-link to ="/registrar" class="Inicio"> <button id="btn-login"> ingresar</button></router-link> 
-            
+           <router-link to ="/registrar" class="Inicio"> <button id="btn-login"> ingresar</button></router-link>    
         </div>
         <div class="subtitle">
              <h5 >Entradas</h5>
         </div>
-       
         <div id="showAccess"></div>
     </td>
     <td valign="top" class="z-pm center" >
@@ -28,11 +25,10 @@
                 <li> <router-link to ="/" class="Escáner">Escáner</router-link> </li>
                 <li> <router-link to ="/Listado" class="Inicio">Listado</router-link> </li>
                 <li> <router-link to ="/registrar" class="Inicio">Registrar</router-link> </li>
-                <li> <router-link to ="/about" class="Inicio">Ayuda</router-link> </li>
-                
+                <li> <router-link to ="/about" class="Inicio">Ayuda</router-link> </li>    
             </ul>
         
-        <!--  <button id="btn-logut" v-on:click ="logout()" >salir</button> -->
+         <!-- <button id="btn-logut" v-on:click ="logout()" >salir</button> -->
         </div>	
         <div class="content">
        <!--    Visualizar los routers o enlaces -->
@@ -84,7 +80,7 @@
     font-weight: 500;
     }
     #clock{
-        margin-top: 50px;
+        margin-top: 20px;
         text-align: center;
         color: aquamarine;
         font-size: 20px;
@@ -144,7 +140,23 @@
         display:inline;
     }
     .logo{
+    margin-top: 20px;
     width: 100%;
+    height: 120px;
+    background-image: url("assets/images/logo.png");
+    background-repeat: no-repeat;
+    background-size: 50%; 
+    background-position: center; 
+    }
+    #brand > p{
+        text-align: center;
+        color: aqua;
+        letter-spacing: 10px;
+        font-size: 15px;
+        background: #2E353D;
+        margin: 0;
+        height: 35px;
+        padding: 8px;
     }
     .welcome{
     padding-left: 5px; padding-top: 12px;
@@ -244,9 +256,12 @@
         margin-top: 18px;
     }
     .content{
+        position: relative;
+        width: 100%;
+        height: 80%;
         display: flex;
         justify-content: center;
-        align-items: center;
+       
     }
     .btn-index{
         float: left;
@@ -284,28 +299,21 @@ export default {
   components: {
    DigitalClock
   },
-
   methods: {
-
- 
     logout() {
       console.log("SALISTE DE LA SESSION")
-     
        let vue = this;
         console.log(this.$session.get('admin'))
         let tokenout = {
             token : this.$session.get('admin')
         }
-       
         axios.post('http://10.0.32.44:3333/logout',tokenout )
         .then(function (response) {
             if(response.data.deleted){
                 vue.$session.destroy()
                 vue.$router.push('/')
                 console.log("Destruido")
-                
-            }
-              
+            }   
                 console.log(response.data);
               })
               .catch(function(error){

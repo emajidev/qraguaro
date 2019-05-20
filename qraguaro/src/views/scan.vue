@@ -1,7 +1,7 @@
 <template>
 <div id ='scan'>
  <h3> Escáner QR</h3>
- <div class="content">
+ <div class="contentCode">
     <!--   camara scanner -->
     <ScanQr v-if="show"  v-on:code-scanned="codeScanned" v-on:error-captured="errorCaptured" :stop-on-scanned="true" :draw-on-found="true" :responsive="false"/>  
 </div>
@@ -111,6 +111,13 @@ export default {
 
 </script>
 <style scope>
+.contentCode{
+  width: 100%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #dataQR{
   margin-top: 25px;
   color: aquamarine;
@@ -120,5 +127,8 @@ export default {
 }
 #scan{
  color: aquamarine;
+ height: auto;
+ width: 640px;
+ 
 }
 </style>
