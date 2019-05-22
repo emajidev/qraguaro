@@ -3,7 +3,10 @@
        <table>
        <td  valign="top" class="z-pm" id="sidebar">
         <div id="brand" >
-            <p>Qraguaro</p>
+            <div id="title-program">
+                <p>Qraguaro</p>
+            </div>
+            
             <div class="logo" > </div>
             <div id="clock">
                 <digital-clock :blink="true" :displaySeconds="true" :twelveHour="true"  />
@@ -11,12 +14,23 @@
         </div>
         <div id="menu">
             <!-- <input id="search" type="text" placeholder="Buscar"> -->
-           <router-link to ="/registrar" class="Inicio"> <button id="btn-login"> ingresar</button></router-link>    
+           <router-link to ="/registrar" class="Inicio"> <button class="btn" id="btn-login"> ingresar</button></router-link>    
         </div>
         <div class="subtitle">
              <h5 >Entradas</h5>
         </div>
-        <div id="showAccess"></div>
+        <div id="showAccess">
+            
+            <div id="entrances" v-for = "(item , index) in  users"  :key="item.id" >
+                <transition name="fade">
+                <div id="users" v-if= "true">  
+                    <p id="hours" > {{item.createdAt }} </p> {{item.name}} {{item.lastName}} {{item.cid }} 
+ 
+                </div>
+                </transition>
+            </div>
+           
+        </div>
     </td>
     <td valign="top" class="z-pm center" >
    
@@ -48,6 +62,14 @@
 </template>
 
 <style>
+    .fade-enter-active, .fade-leave-active {
+  transition: all 1s ease;
+   opacity: 100;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+    
     body{
         font-family: OpenSans, Verdana, Tahoma, Arial, "Trebuchet MS", "Times New Roman", Georgia, sans-serif, serif;
         background: rgb(27, 30, 34);
@@ -76,9 +98,22 @@
         border-collapse: collapse;
         
     }
+    .btn{
+        background: none;
+        border: 1px white solid;
+        border-radius: 8px;
+        color: white;
+        margin-top: 20px ;
+        padding: 5px;
+       
+        outline:none;
+        cursor: pointer;
+    }
     h5{
     font-weight: 500;
     }
+    #users{color: aquamarine;
+    margin-bottom: 20px;}
     #clock{
         margin-top: 20px;
         text-align: center;
@@ -90,19 +125,41 @@
         padding: 0;
         margin: 0;
     }
+    li{
+        font-size: 12px;
+
+    }
+    #entrances > li{
+
+    }
+    #menu-content > li {
+        cursor: pointer;
+    }
+
+    #hours{
+        color: aqua;
+        display: inline;
+    }
     li,a{
         display: inline;
         text-decoration: none;
         list-style: none;
         color: #e1ffff;
         line-height:35px;
-        cursor: pointer;
-        padding-left: 10px;
-        padding: 0 10px 0 10px;
+        
+        margin-right: 5px;
+        
+       
     }
     input{
         font-family: OpenSans, Verdana, Arial, Helvetica, sans-serif;
         font-size: 12px;
+        display: inline;
+        
+    }
+    li{
+        display: inline;
+        color: aquamarine;
         
     }
     #btn-login{
@@ -119,7 +176,7 @@
     }
     .btn-send{
         border: none;
-        background: rgb(112, 252, 112);
+        border: 1px aquamarine solid;
         width: 100px;
         text-align: center;
         margin-left: 15px;
@@ -130,14 +187,28 @@
         cursor: pointer;
         
     }
+    #register > input{
+       display: inline;
+       border: 1px aquamarine solid;
+       background: none;
+       border-radius: 5px;
+       color: rgb(0, 255, 170);
+       padding: 3px;
+       font-size: 12px;
+       margin-right: 10px;
+    }
+    #botones{
+        display: inline;
+    }
     .block-in{
     background: none;
     border: none;
-    color: #23282E;
+    color: #ffffff;
     font-size:12px;
+    display:inline;
     }
     .list-inline{
-        display:inline;
+        
     }
     .logo{
     margin-top: 20px;
@@ -148,12 +219,13 @@
     background-size: 50%; 
     background-position: center; 
     }
-    #brand > p{
+    #brand > #title-program> p{
+        
         text-align: center;
         color: aqua;
         letter-spacing: 10px;
         font-size: 15px;
-        background: #2E353D;
+       
         margin: 0;
         height: 35px;
         padding: 8px;
@@ -178,7 +250,7 @@
         padding: 0; margin: 0;
     }
     #sidebar{
-        background:transparent; width:250px; height:100%;background:#23282E;
+        background:transparent; width:320px; height:100%;background:#23282E;
     }
 
     #welcomebar{
@@ -211,6 +283,13 @@
         text-align: center;
        
     }
+    #title-program{
+        
+        width: 100%;
+        background: #2E353D;
+        display: flex;
+        justify-content: center;
+    }
     .subtitle{
         background:#5d6b6e36;
         border-radius: 0 20px 0 0;
@@ -222,7 +301,10 @@
     #showAccess{
         background: #5d6b6e36;
         width: 100%;
-        height: 70%;
+        height: 85%;
+       
+        padding: 10px;
+        padding-left: 20px;
     }
     .qrscam{
         float: left;
@@ -288,18 +370,38 @@
 <script>
 import DigitalClock from "vue-digital-clock";
 import axios from 'axios'
+import { async } from 'q';
 export default {
   name: 'app',
-  data:{
-      hour:0,
-      minutes:0,
-      seconds:0
-
+  data:function(){
+      return{
+        show:false,
+        hour:0,
+        minutes:0,
+        seconds:0,
+        users:[],
+        name:'',
+        lastName:'',
+        cid:'',
+        telf:'',
+        email:'',
+      }
+  
   },
   components: {
    DigitalClock
   },
   methods: {
+    
+    
+    formatTime(entrances){
+      let newEntrances =  entrances.map((entrance)=>{
+        let newTime = new Date(entrance.createdAt);
+        entrance.createdAt = newTime.getHours() + ":" + newTime.getMinutes() + ":" + newTime.getSeconds();
+        return entrance;
+      });
+      return newEntrances;
+    },
     logout() {
       console.log("SALISTE DE LA SESSION")
        let vue = this;
@@ -320,6 +422,24 @@ export default {
                 console.log(error);
               });    
       } 
-  }
+  },
+  
+    mounted: async function(){
+        var self = this;
+         this.$eventBus.$on('update-entrances',function(data){
+           
+            self.users = self.formatTime(data.newEntrances);
+            console.log("lista de entrada :", self.users);
+            
+        })
+
+     let res = await axios.get('http://10.0.32.44:3333/entrances-list');
+        self.users = self.formatTime(res.data);
+        
+    },
+    created() {
+        self.show =  !self.show;
+    },
+       
 }
 </script>

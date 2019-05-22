@@ -3,7 +3,7 @@
     
       <!--  formulario de registro  -->
     <h2>Registrar</h2>
-      <form action="" >
+      <form id="register" action="" >
         <input id="Gname" class="input-crud" type="text" placeholder="Nombre" v-model="name">
         <input id="GlastName" class="input-crud" type="text" placeholder="Apellido" v-model="lastName">
         <input id="Gcid" class="input-crud" type="text" placeholder="Cedula" v-model="cid">
@@ -11,9 +11,9 @@
         <input id="Gemail" class="input-crud" type="email" placeholder="Correo" v-model="email">
         <input  class="input-crud btn-send" value="Guardar" v-on:click="createUser ">
       </form> 
-      <h2>Registrados </h2>
+      <h4>Registrados </h4>
       <div ref="list" id="list"  v-for = "(item , index) in  users" :key="item.id" >
-        <ul ref="input">  
+        <ul id="registered" ref="input">  
           <li class="list-inline"><p>{{index}}</p></li>
           <li class="list-inline"> <input :readonly="disableInput" class="inpt block-in"   type="text" :placeholder="item.name" v-model="item.nameU "  >  </li>
                     <li class="list-inline"> <input :readonly="disableInput" class="inpt block-in"    type="text" :placeholder="item.lastName" v-model="item.lastNameU">  </li>
@@ -23,7 +23,7 @@
           
           <li id="botones" class="list-inline"> 
             
-          <button id="update"   v-on:click="onedit(index ,false )"   >Actualizar</button>
+          <button class="btn" id="update"   v-on:click="onedit(index ,false )"   >Actualizar</button>
           <button id="save" v-on:click ="confirmeSave(index)"  >Guardar</button>
           <template >
             <div class="confirm" >
@@ -37,7 +37,7 @@
         
           </li>   
           <li class="list-inline"> 
-            <button id="delete"  v-on:click="confirmeDelete(index)" > Eliminar </button> 
+            <button class="btn" id="delete"  v-on:click="confirmeDelete(index)" > Eliminar </button> 
           <template >
             <div class="confirm-delete" >
               <div class="box-confirm">
@@ -422,6 +422,14 @@ export default {
 
 </script>
 <style scope>
+h2{
+  color: aquamarine;
+  font-size: 15px;
+}
+h4{
+  color: aquamarine;
+  
+}
 #save,.confirm{
   display: none
 }
@@ -454,4 +462,5 @@ p{
   width: 200px;
   
 }
+
 </style>

@@ -3,10 +3,10 @@
   <div id="login" v-click-outside="outside">
     <h2>Login</h2>
       <form action="">
-          <input type="text" placeholder="Usuario" v-model="username" >
-          <input type="text" placeholder="Contraseña" v-model="password">
+          <input class="inp-login" type="text" placeholder="Usuario" v-model="username" >
+          <input  class="inp-login" type="password" placeholder="Contraseña" v-model="password">
       </form>
-      <button v-on:click ="login()" >Entrar</button>
+      <button id="btnlogin" v-on:click ="login()" >Entrar</button>
       <div>
         <img id="iconsecurity" src="../assets/images/iconsecurity.png" alt="">
       </div>
@@ -116,6 +116,9 @@ export default {
   align-items: center;
   
 }
+#box-confirm > button{
+  background: #00ffff1a !important;
+}
 #iconsecurity{
   width: 50px;
   margin:20px;
@@ -132,7 +135,7 @@ export default {
   background: #00ffff1a;
  
 }
-input{
+.inp-login{
   display: block;
   margin-top: 10px;
   outline: none;
@@ -142,20 +145,20 @@ input{
   height: 30px;
   color: aquamarine;
   padding-left: 10px;
+  width: 100%;
 }
-button{
+#btnlogin{
       background: none;
         border: 1px white solid;
         border-radius: 8px;
         color: white;
         margin-top: 20px ;
-        padding: 5px;
-        width: 100%;
+       
+        width: 300px;
         outline:none;
         cursor: pointer;
 }
 h2{
   color: aquamarine;
-  
 }
 </style>

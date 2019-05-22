@@ -1,7 +1,7 @@
 <template>
   
   <div id="#Listado">
-      <h3>Listado </h3>
+      <h2>Listado </h2>
         <div id="list"  v-for = "(item , index) in  users" >
         <ul>  
         <li>  

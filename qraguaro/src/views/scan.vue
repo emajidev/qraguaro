@@ -16,8 +16,15 @@
     Hora: {{hours}}
   </h5>
   <h5>
-    Nombre: {{name}}
-  </h5>  
+    Ci: {{cid}} 
+  </h5> 
+  <h5>
+    Nombre: {{name}} {{lastName}}
+  </h5> 
+   <h5 v-if="showMessage">
+     Usuario no registrado 
+  </h5> 
+   
 </div>
 
 </div>    
@@ -30,12 +37,15 @@ import axios from 'axios'
 import { async } from 'q';
 
 export default {
+    
     name:'scan',
     components: {
     ScanQr
   },
   data() {
     return {
+      showMessage:false,
+     
       placeholderValue:'watafaka',
       users:[],
       errorMessage: "",
@@ -56,6 +66,7 @@ export default {
       
     };
   },
+
   methods: {
       OpenDoor(){
         /* e.preventDefault(); */
@@ -69,16 +80,24 @@ export default {
         },
       ///// Envia el codigo scaneado al servidor para verificar 
       codeScanned: async function (code){
+      var self = this;
       this.scanned = code;
       console.log(this.scanned);
       
       let res = await axios.post('http://10.0.32.44:3333/checkQR', {QR: this.scanned});
       console.log(res.data);
       if(res.data.check){
+        if(res.data){
+          this.$eventBus.$emit('update-entrances',res.data);
+        }
         this.OpenDoor();
-        this.name = res.data.name
+        this.cid = res.data.cid;
+        this.name = res.data.name;
+        this.lastName = res.data.lastName
+        this.showMessage = false;
       }else{
-        this.name = "usuario no registrado"
+      
+        this.showMessage = true;
       }
      
     },

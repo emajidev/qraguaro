@@ -50,7 +50,8 @@ export default {
     return {
       showPlay: false,
       containerWidth: null,
-      active: true
+      active: true,
+      entrancesList :[],
     };
   },
   computed: {
