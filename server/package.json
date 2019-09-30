@@ -1,0 +1,23 @@
+{
+  "name": "user-auth-server",
+  "version": "1.0.0",
+  "description": "App created by NodeJS web development Book",
+  "main": "user-server.mjs",
+  "scripts": {
+    "start": "DEBUG=users:* PORT=3333 SEQUELIZE_CONNECT=sequelize-pg.yaml node --experimental-modules user-server"
+  },
+  "author": "sarturo",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^2.6.9",
+    "fs-extra": "^5.0.0",
+    "js-yaml": "^3.12.1",
+    "pg": "^7.9.0",
+    "pg-hstore": "^2.3.2",
+    "restify": "^6.4.0",
+    "restify-clients": "^1.6.0",
+    "restify-cors-middleware": "^1.1.1",
+    "sequelize": "^4.42.0",
+    "sqlite3": ">=3.x"
+  }
+}

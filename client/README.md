@@ -1,4 +1,4 @@
-# qraguaro
+# qraguaro - client side
 
 ## Project setup
 ```
