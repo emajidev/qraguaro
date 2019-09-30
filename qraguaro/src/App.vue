@@ -14,7 +14,7 @@
         </div>
         <div id="menu">
             <!-- <input id="search" type="text" placeholder="Buscar"> -->
-           <router-link to ="/registrar" class="Inicio"> <button class="btn" id="btn-login"> ingresar</button></router-link>    
+           <router-link to ="/registrar" class="Inicio"> <button class="btn" id="btn-login"> Ingresar</button></router-link>    
         </div>
         <div class="subtitle">
              <h5 >Entradas</h5>
