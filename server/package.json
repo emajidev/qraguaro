@@ -17,7 +17,7 @@
     "restify": "^6.4.0",
     "restify-clients": "^1.6.0",
     "restify-cors-middleware": "^1.1.1",
-    "sequelize": "^4.42.0",
+    "sequelize": "^5.15.1",
     "sqlite3": ">=3.x"
   }
 }
