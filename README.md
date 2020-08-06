@@ -6,8 +6,9 @@
 
 ### pasos para ejecutar
 
-1. realiza un git clone del repositorio
+1. Realiza un git clone del repositorio
 2. Luego entra en la ruta del archivo y ejecuta npm install en la consola de comandos para la carpeta cliente y servidor por separado.
 3. El cliente y servidor se ejecutan por separado. para el cliente debes tener correctamente instalado el cli de vue, antes de iniciar npm run start debes ejecutar npm install currently --save.
 4. npm run server para ejecutar el cliente.
 5. node user-server.mjs para iniciar el servidor del sistema.
+
