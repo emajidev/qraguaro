@@ -13,7 +13,7 @@
     "johnny-five": "^1.0.0",
     "jsqr": "^1.2.0",
     "register-service-worker": "^1.6.2",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "vue": "^2.6.6",
     "vue-digital-clock": "^2.0.0",
     "vue-material": "^1.0.0-beta-10.2",
